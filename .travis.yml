@@ -1,10 +1,27 @@
 language: cpp
-os: linux
-compiler: gcc
-dist: trusty
-sudo: required
+matrix:
+      - os: linux
+	compiler: gcc
+	dist: trusty
+	sudo: required
+	env: GCC_V=4
+      - os: linux
+	compiler: gcc
+	dist: trusty
+	sudo: required
+	env: GCC_V=5
+	addons:
+	  apt:
+	    sources:
+	    - ubuntu-toolchain-r-test
+	    packages:
+	    - gcc-5
+	    - g++-5
 
 before_install:
+    - if test "$GCC_V" = "5"; then
+	sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc;
+      fi
     - sudo apt-get update -q;
     - sudo apt-get install -y cmake cmake-data g++ gcc gfortran build-essential make patch sed
                             libx11-dev libxft-dev libxext-dev libxpm-dev libxmu-dev libglu1-mesa-dev libgl1-mesa-dev
